@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>评论管理</title>
+<link rel="stylesheet" href="/static/layui/css/layui.css"></link>
+<link rel="stylesheet" href="/static/css/css.css"></link>
+</head>
+<body>
+
+	<script type="text/html" id="switchTpl">
+        <!-- 这里的 checked 的状态只是演示 -->
+       <input type="checkbox" name="{{d.id}}" value="{{d.state}}" lay-skin="switch" lay-filter="stateSwitch" lay-text="&nbsp;是&nbsp;|&nbsp;否&nbsp;" {{ d.state == 1 ? 'checked' : '' }}>
+	</script>
+
+	<div style="padding: 20px">
+	        <span class="layui-breadcrumb">
+			  <a>首页</a>
+			  <a><cite>评论管理</cite></a>
+			</span>
+		    <div style="padding-top: 20px;">
+			    <div>
+			    	<div>
+			          <button class="layui-btn layuiadmin-btn-list" data-type="batchdel" onclick="deleteSelected()">删除</button>
+			    	</div>
+			    </div>
+			    <div>
+				    <table width="100%" id="commentListTable" ></table>
+			    </div>
+			</div>
+	  </div>
+	    
+<script src="/static/layui/layui.js"></script>
+<script type="text/javascript">
+
+	layui.use(['element','form','table'], function(){
+	    var form=layui.form;
+		  var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+		  $ = layui.jquery; // 使用jquery
+		  table = layui.table;
+		  
+		  table.render({
+		    elem: '#commentListTable'
+		    ,url:'/admin/comment/list'
+		    ,cols: [[
+			  {type:'checkbox'}
+		      ,{field:'content', title: '评论内容'}
+		      ,{field:'article', width:200, title: '评论帖子',templet:formatArticleName}
+		      ,{field:'commentDate', width:200, title: '评论日期', sort: true,align:'center'}
+		      ,{field:'user', width:100, title: '评论用户',templet:formatUserName}
+		      ,{field:'state', width:100, title: '审核状态',align:'center',sort: true,templet:formatState}
+		      ,{field:'hot', title:'审核通过?', width:100, templet: '#switchTpl', unresize: true}
+		      ,{field:'action', width:100, title: '操作',align:'center',templet:formatAction}
+		    ]]
+		    ,page: true
+		  });
+		  
+		// 监听热门操作
+	    form.on('switch(stateSwitch)', function(obj){
+	    	$.post("/admin/comment/updateState",{"id":this.name,"state":obj.elem.checked},function(result){
+				if(result.success){
+					layer.msg("执行成功！");
+					table.reload("commentListTable",{});
+				}else{
+					layer.msg("执行失败，请联系管理员！");
+				}
+			},"json");
+	      
+	    });
+		  
+	});
+	
+	
+	function formatArticleName(d){
+		return "<a href='/article/"+d.article.id+"' target='_blank'>"+d.article.name+"</a>";
+	}
+	
+	function formatUserName(d){
+		return d.user.userName;
+	}
+	
+	function formatState(d){
+		if(d.state==0){
+			return "<font color=green>待审核</font>";
+		}else if(d.state==1){
+			return "<font color=blue>审核通过</font>";
+		}else if(d.state==2){
+			return "<font color=red>审核未通过</font>";
+		}
+	}
+	
+	function deleteSelected(){
+		var checkStatus=table.checkStatus('commentListTable');
+		if(checkStatus.data.length==0){
+			layer.msg("请选择要删除的数据！");
+			return;
+		}
+		var strIds=[];
+		var rows=checkStatus.data;
+		for(var i=0;i<checkStatus.data.length;i++){
+			strIds.push(rows[i].id);
+		}
+		var ids=strIds.join(",");
+		layer.confirm("您确定要删除这<font color=red>"+checkStatus.data.length+"</font>条记录吗？", {
+		      title:"系统提示"
+			  ,btn: ['确定','取消'] //按钮
+			}, function(){
+				layer.closeAll('dialog');
+				$.post("/admin/comment/deleteSelected",{"ids":ids},function(result){
+					if(result.success){
+						layer.msg("删除成功！");
+						table.reload("commentListTable",{});
+					}else{
+						layer.msg("删除失败，请联系管理员！");
+					}
+				},"json");
+			}, function(){
+			  
+			});
+	}
+	
+	function deleteOne(id){
+		layer.confirm('您确定要删除这条记录吗？', {
+	    title:"系统提示"
+		  ,btn: ['确定','取消'] //按钮
+		}, function(){
+			layer.closeAll('dialog');
+			$.post("/admin/comment/delete",{"id":id},function(result){
+				if(result.success){
+					layer.msg("删除成功！");
+					table.reload("commentListTable",{});
+				}else{
+					layer.msg("删除失败，请联系管理员！");
+				}
+			},"json");
+		}, function(){
+		  
+		});
+	}
+	
+	
+	function formatAction(d){
+		return "<button class='layui-btn layui-btn-warm layui-btn-xs' onclick='deleteOne("+d.id+")'><i class='layui-icon layui-icon-delete' ></i>删除</button>";
+	}
+	
+	
+	
+</script>
+</body>
+</html>

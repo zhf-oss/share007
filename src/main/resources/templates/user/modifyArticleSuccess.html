@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title th:text="${title}+'-zhf下载'"></title>
+<link rel="stylesheet" href="/static/layui/css/layui.css" />
+<link rel="stylesheet" href="/static/css/css.css" />
+</head>
+<body>
+<div class="w1170" th:include="common/head::#h" style="padding-bottom: 10px;overflow:visible;"></div>
+	<div class="w1170">
+		<div style="float: left;width: 200px" th:include="common/menu::#m"/>
+	    <div style="float: right;width: 960px" th:include="user/page/modifyArticleSuccessPage::#f"/>
+	</div>
+<script src="/static/layui/layui.js"></script>
+<script src="/static/js/common.js"></script>
+<script>
+	/*<![CDATA[*/  
+	layui.use(['element','laypage','form'], function(){
+		  var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+		  var $ = layui.jquery; // 使用jquery
+		  var laypage = layui.laypage;
+		  var tMenu='t_0';
+		  $("#"+tMenu).css("color","red");
+	});
+	/*]]>*/
+	
+</script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>友情链接管理</title>
+<link rel="stylesheet" href="/static/layui/css/layui.css"></link>
+<link rel="stylesheet" href="/static/css/css.css"></link>
+</head>
+<body>
+
+
+	<div style="padding: 20px">
+	        <span class="layui-breadcrumb">
+			  <a>首页</a>
+			  <a><cite>友情链接管理</cite></a>
+			</span>
+		    <div style="padding-top: 20px;">
+		    	<div>
+			    	<div>
+			          <button class="layui-btn layuiadmin-btn-list" data-type="batchdel" onclick="addLink()">添加</button>
+			    	</div>
+			    </div>
+			    <div>
+				    <table width="100%" id="linkListTable" ></table>
+			    </div>
+			</div>
+	  </div>
+	    
+<script src="/static/layui/layui.js"></script>
+<script src="/static/js/common.js"></script>
+<script type="text/javascript">
+
+	layui.use(['element','form','table'], function(){
+	    var form=layui.form;
+		  var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+		  $ = layui.jquery; // 使用jquery
+		  table = layui.table;
+		  
+		  table.render({
+		    elem: '#linkListTable'
+		    ,url:'/admin/link/list'
+		    ,cols: [[
+			  {type:'checkbox'}
+		      ,{field:'name', width:200,title: '友情链接名称'}
+		      ,{field:'url', title: '友情链接地址'}
+		      ,{field:'sort', width:100, title: '排列序号',align:'center'}
+		      ,{field:'action', width:150, title: '操作',align:'center',templet:formatAction}
+		    ]]
+		    ,page: true
+		  });
+		  
+		  
+	});
+	
+	
+	function deleteOne(id){
+		layer.confirm('您确定要删除这条记录吗？', {
+	    title:"系统提示"
+		  ,btn: ['确定','取消'] //按钮
+		}, function(){
+			layer.closeAll('dialog');
+			$.post("/admin/link/delete",{"id":id},function(result){
+				if(result.success){
+					layer.msg("删除成功！");
+					table.reload("linkListTable",{});
+				}else{
+					layer.msg("删除失败，请联系管理员！");
+				}
+			},"json");
+		}, function(){
+		  
+		});
+	}
+	
+	function addLink(){
+		layer.open({
+			  type: 2,
+			  title: '添加友情链接',
+			  area: ['500px', '400px'],
+			  content: '/admin/zhfLink.html' //iframe的url
+			});
+	}
+	
+	function modifyLink(id){
+		layer.open({
+			  type: 2,
+			  title: '修改友情链接',
+			  area: ['500px', '400px'],
+			  content: '/admin/zhfLink.html?id='+id //iframe的url
+			});
+	}
+	
+	
+	function formatAction(d){
+		return "<button class='layui-btn layui-btn-normal layui-btn-xs' onclick='modifyLink("+d.id+")'><i class='layui-icon layui-icon-edit'></i>编辑</button><button class='layui-btn layui-btn-warm layui-btn-xs' onclick='deleteOne("+d.id+")'><i class='layui-icon layui-icon-delete' ></i>删除</button>";
+	}
+	
+	
+	
+</script>
+</body>
+</html>

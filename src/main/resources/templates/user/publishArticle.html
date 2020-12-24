@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title th:text="${title}+'-zhf下载'"></title>
+<link rel="stylesheet" href="/static/layui/css/layui.css" />
+<link rel="stylesheet" href="/static/css/css.css" />
+</head>
+<body>
+<div class="w1170" th:include="common/head::#h" style="padding-bottom: 10px;overflow:visible;"></div>
+	<div class="w1170">
+		<div style="float: left;width: 200px" th:include="common/menu::#m"/>
+	    <div style="float: right;width: 960px" th:include="user/page/publishArticlePage::#f"/>
+	</div>
+<script src="/static/layui/layui.js"></script>
+<script src="/static/js/common.js"></script>
+<script>
+/*<![CDATA[*/  
+layui.use(['element','form','layedit'], function(){
+      var form=layui.form;
+	  var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+	  var $ = layui.jquery; // 使用jquery
+	  var layedit=layui.layedit;
+	  var index=layedit.build('content',{
+		  uploadImage:{
+			  url:'/user/article/uploadImage',
+			  type:'post'
+		  }
+	  });
+	 
+	  //监听提交
+	  form.on('submit(pa)', function(data){
+		  var content=layedit.getContent(index);
+		  if(content==""){
+			  layer.msg("请输入资源描述！");
+			  return false;
+		  }
+		$("#content").val(content);
+	    return true;
+	  });
+});
+
+
+/*]]>*/
+
+	
+</script>
+</body>
+</html>

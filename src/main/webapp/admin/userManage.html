@@ -1,0 +1,159 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>用户管理</title>
+<link rel="stylesheet" href="/static/layui/css/layui.css" />
+<link rel="stylesheet" href="/static/css/css.css" />
+</head>
+<body>
+
+	<script type="text/html" id="vipSwitchTpl">
+       <input type="checkbox" name="{{d.id}}" value="{{d.vip}}" lay-skin="switch" lay-filter="vipSwitch" lay-text="&nbsp;是&nbsp;|&nbsp;否&nbsp;" {{ d.vip == true ? 'checked' : '' }}>
+	</script>
+	
+	<script type="text/html" id="offSwitchTpl">
+       <input type="checkbox" name="{{d.id}}" value="{{d.off}}" lay-skin="switch" lay-filter="offSwitch" lay-text="&nbsp;是&nbsp;|&nbsp;否&nbsp;" {{ d.off == true ? 'checked' : '' }}>
+	</script>
+
+	<div style="padding: 20px">
+	        <span class="layui-breadcrumb">
+			  <a>首页</a>
+			  <a><cite>用户管理</cite></a>
+			</span>
+		    <div style="padding-top: 20px;">
+		        <div>
+		    	 <div style="padding: 20px;">
+		          	<div class="layui-form">
+			          <div class="layui-inline">
+			            <label class="layui-form-label">用户名：</label>
+			            <div class="layui-input-inline">
+			              <input type="text" id="s_userName"  placeholder="请输入" autocomplete="off" class="layui-input" onkeydown="if(event.keyCode==13) search()"/>
+			            </div>
+			          </div>
+			          <div class="layui-inline">
+			          	 <label class="layui-form-label">邮箱：</label>
+				            <div class="layui-input-inline">
+				              <input type="text" id="s_email"  placeholder="请输入" autocomplete="off" class="layui-input" onkeydown="if(event.keyCode==13) search()"/>
+				            </div>
+				          </div>
+						&nbsp;&nbsp;
+			          <div class="layui-inline">
+			            <button class="layui-btn layuiadmin-btn-list"  lay-submit="" onclick="search()" lay-filter="LAY-app-contlist-search">
+			              <i class="layui-icon layui-icon-search layuiadmin-button-btn" ></i>
+			            </button>
+			          </div>
+			        </div>
+		          </div>
+			    </div>
+			    <div>
+				    <table width="100%" id="userListTable" ></table>
+			    </div>
+			</div>
+	  </div>
+	    
+<script src="/static/layui/layui.js"></script>
+<script src="/static/js/common.js"></script>
+<script type="text/javascript">
+
+	layui.use(['element','form','table'], function(){
+		var form=layui.form;
+		var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+		$ = layui.jquery; // 使用jquery
+		table = layui.table;
+
+		table.render({
+			elem: '#userListTable'
+			,url:'/admin/user/list'
+			,cols: [[
+				{type:'checkbox'}
+				,{field:'userName', title: '用户名'}
+				,{field:'email', title: '邮箱'}
+				,{field:'registerDate', title: '注册时间'}
+				,{field:'points',width:100, title: '积分',align:'center'}
+				,{field:'vip', width:100, title: 'VIP会员',align:'center',templet:vipSwitchTpl}
+				,{field:'off', width:100, title: '封禁',align:'center',templet:offSwitchTpl}
+				,{field:'action', width:200, title: '操作',align:'center',templet:formatAction}
+			]]
+			,page: true
+		});
+
+
+		// 监听会员设置操作
+		form.on('switch(vipSwitch)', function(obj){
+			$.post("/admin/user/updateVipState",{"id":this.name,"vip":obj.elem.checked},function(result){
+				if(result.success){
+					layer.msg("执行成功！");
+					table.reload("userListTable",{});
+				}else{
+					layer.msg("执行失败，请联系管理员！");
+				}
+			},"json");
+
+		});
+
+		// 监听用户状态操作
+		form.on('switch(offSwitch)', function(obj){
+			$.post("/admin/user/updateUserState",{"id":this.name,"off":obj.elem.checked},function(result){
+				if(result.success){
+					layer.msg("执行成功！");
+					table.reload("userListTable",{});
+				}else{
+					layer.msg("执行失败，请联系管理员！");
+				}
+			},"json");
+
+		});
+
+	});
+
+	function formatAction(d){
+		return "<button class='layui-btn layui-btn-warm layui-btn-xs' onclick='resetPassword("+d.id+")'><i class='layui-icon layui-icon-edit' ></i>重置密码</button>&nbsp;&nbsp;<button class='layui-btn layui-btn-normal layui-btn-xs' onclick='addPoints("+d.id+")'><i class='layui-icon layui-icon-edit' ></i>充值积分</button>";
+	}
+	
+	function search(){
+		var s_userName=$("#s_userName").val();
+		var s_email=$("#s_email").val();
+		table.reload("userListTable",{
+			page:{
+				curr:1
+			}
+			,where:{
+				userName:s_userName,
+				email:s_email
+			}
+		});
+	}
+
+	function resetPassword(id){
+		layer.confirm('您确定要对用户进行重置密码吗？', {
+			title:"系统提示"
+			,btn: ['确定','取消'] //按钮
+		}, function(){
+			layer.closeAll('dialog');
+			$.post("/admin/user/resetPassword",{"id":id},function(result){
+				if(result.success){
+					layer.msg("重置成功！");
+					table.reload("userListTable",{});
+				}else{
+					layer.msg("重置失败，请联系管理员！");
+				}
+			},"json");
+		}, function(){
+
+		});
+	}
+
+	function addPoints(id) {
+		layer.open({
+			type:2,
+			title:'充值积分',
+			area: ['400px', '300px'],
+			content: '/admin/addPoints.html?id='+id //iframe的url
+		});
+	}
+	
+</script>
+</body>
+</html>

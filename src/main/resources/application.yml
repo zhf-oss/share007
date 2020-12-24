@@ -1,0 +1,47 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /
+
+  tomcat:
+    uri-encoding: UTF-8
+
+mvc:
+  hiddenmethod:
+    filter:
+      enabled: true
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/db_share?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: root
+    type: com.alibaba.druid.pool.DruidDataSource
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  thymeleaf:
+    cache: false
+
+  freemarker:
+    suffix: .ftl
+
+  resources:
+    static-locations: classpath:/static/, classpath:/templates/
+
+lucenePath: E://share/lucene/
+
+articleImageFilePath: E://share/articleImages/
+
+userImageFilePath: E://share/userImages/
+
+#lucenePath: /home/lucene
+
+#articleImageFilePath: /home/articleImages/
+
+#userImageFilePath: /home/userImages/
+

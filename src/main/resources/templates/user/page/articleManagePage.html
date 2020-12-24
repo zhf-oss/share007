@@ -1,0 +1,49 @@
+<meta charset="UTF-8"/>
+<div id="f">
+	
+	<fieldset class="layui-elem-field layui-field-title">
+	  <legend>资源管理</legend>
+	</fieldset>
+    <div>
+	    <div>
+	    	 <div style="padding: 20px">
+	          	<div class="layui-form">
+		          <div class="layui-inline">
+		            <label class="layui-form-label">资源名称：</label>
+		            <div class="layui-input-inline">
+		              <input type="text" id="s_name" style="width: 300px" placeholder="请输入" autocomplete="off" class="layui-input" onkeydown="if(event.keyCode==13) search()" />
+		            </div>
+		          </div>
+		          
+		          <div class="layui-inline">
+		              <label class="layui-form-label">审核状态：</label>
+			          <div class="layui-input-inline">
+					      <select id="s_state" name="s_state">
+					        <option value="">请选择审核状态</option>
+					        <option value="1">未审核</option>
+					        <option value="2">审核通过</option>
+					        <option value="3">审核未通过</option>
+					      </select>
+					    </div>
+		            </div>
+					&nbsp;&nbsp;
+		          <div class="layui-inline">
+		            <button class="layui-btn layuiadmin-btn-list" lay-submit="" onclick="search()" lay-filter="LAY-app-contlist-search">
+		              <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+		            </button>
+		          </div>
+		        </div>
+	          </div>
+	    	<div>
+	          <button class="layui-btn layuiadmin-btn-list" data-type="batchdel" onclick="deleteSelected()">删除</button>
+	          <button class="layui-btn layuiadmin-btn-list" data-type="add" onclick="window.location.href='/user/article/toPublishArticlePage'">发布资源</button>
+	          &nbsp;&nbsp;(&nbsp;<font color="red">1，鼠标移动到红色“审核未通过”字体上，能显示未通过原因；2，审核未通过的，请重新编辑帖子，然后提交审核；</font>&nbsp;)
+	    	</div>
+	    </div>
+	    <div>
+		    <table class="layui-hide" id="articleListTable">
+
+			</table>
+	    </div>
+	</div>
+</div>

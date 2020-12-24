@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>积分充值</title>
+<link rel="stylesheet" href="/static/layui/css/layui.css"></link>
+<style type="text/css">
+
+	table tr td{
+		padding: 10px;
+	}
+
+</style>
+</head>
+<body>
+<div style="padding: 20px">
+	<form method="post">
+		<table>
+			<tr>
+				<td>充值积分：</td>
+				<td><input type="text" id="points" name="points" class="layui-input"/></td>
+			</tr>
+			<tr>
+				<td><button class="layui-btn" onclick="submitData();return false;">提交</button></td>
+				<td><font id="errorInfo" color="red"></font></td>
+			</tr>
+		</table>
+	</form>
+</div>
+<script src="/static/js/jquery.js"></script>
+<script type="text/javascript">
+
+	function submitData(){
+		var points=$("#points").val().trim()
+			if (points=="") { 
+		　　　　     　　 $("#errorInfo").text("请输入充值积分！");
+				  $("#points").focus();
+		　　　　　　      return false; 
+		　　　} 
+		　　　if (!(/(^[1-9]\d*$)/.test(points))) { 
+		　　　　　　$("#errorInfo").text("充值积分必须是正整数！");
+	        	$("#points").focus();
+		　　　　　　return false; 
+		　　  }
+		   var id=getQueryVariable("id");
+		   $.post("/admin/user/addPoints",{id:id,points:points},function(result){
+			  if(result.success){
+				  alert("积分充值成功！");
+				  parent.reloadPage();
+			  }else{
+				  $("#errorInfo").text(result.errorInfo);
+			  }
+		  },"json");
+	}
+	
+	
+	
+	function getQueryVariable(variable){
+	       var query = window.location.search.substring(1);
+	       var vars = query.split("&");
+	       for (var i=0;i<vars.length;i++) {
+	               var pair = vars[i].split("=");
+	               if(pair[0] == variable){return pair[1];}
+	       }
+	       return(false);
+	}
+
+</script>
+</body>
+</html>

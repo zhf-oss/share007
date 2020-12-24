@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>添加或者修改资源类别</title>
+<link rel="stylesheet" href="/static/layui/css/layui.css"></link>
+<style type="text/css">
+
+	table tr td{
+		padding: 10px;
+	}
+
+</style>
+</head>
+<body>
+<div style="padding: 20px">
+	<form method="post">
+		<table>
+			<tr>
+				<td>资源类型名称：</td>
+				<td><input type="text" id="name" name="name" class="layui-input" style="width: 300px"/></td>
+			</tr>
+			<tr>
+				<td valign="top">资源类型描述：</td>
+				<td>
+					<textarea id="remark" name="remark" class="layui-textarea"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td>排列序号：</td>
+				<td><input type="text" id="sort" name="sort" class="layui-input" style="width: 100px;display: inline;"/>&nbsp;&nbsp;<span>(根据数值从小到大排序)</span></td>
+			</tr>
+			<tr>
+				<td><button class="layui-btn" onclick="submitData();return false;">提交</button></td>
+				<td><font id="errorInfo" color="red"></font></td>
+			</tr>
+		</table>
+	</form>
+</div>
+<script src="/static/js/jquery.js"></script>
+<script type="text/javascript">
+
+	function submitData(){
+		var name=$("#name").val().trim();
+		var remark=$("#remark").val().trim();
+		var sort=$("#sort").val().trim();
+		if(name=="") { 
+	　　　　     　　 $("#errorInfo").text("请输入资源类型名称！");
+			  $("#name").focus();
+	　　　　　　      return false; 
+	　　　} 
+		if(sort=="") { 
+	　　　　     　　 $("#errorInfo").text("请输入排列序号！");
+			  $("#sort").focus();
+	　　　　　　      return false; 
+	　　　}
+	　　　if (!(/(^[1-9]\d*$)/.test(sort))) { 
+	　　　　　　$("#errorInfo").text("排列序号必须是正整数！");
+        	$("#sort").focus();
+	　　　　　　return false; 
+	　　  }
+	   var id=getQueryVariable("id");
+	   if(id){
+		   $.post("/admin/arcType/save",{id:id,name:name,remark:remark,sort:sort},function(result){
+			  if(result.success){
+				  alert("修改成功！");
+				  parent.reloadPage();
+			  }else{
+				  $("#errorInfo").text(result.errorInfo);
+			  }
+		  },"json");
+	   }else{
+		   $.post("/admin/arcType/save",{name:name,remark:remark,sort:sort},function(result){
+				  if(result.success){
+					  alert("添加成功！");
+					  parent.reloadPage();
+				  }else{
+					  $("#errorInfo").text(result.errorInfo);
+				  }
+			  },"json");
+	   }
+	}
+	
+	
+	
+	function getQueryVariable(variable){
+	       var query = window.location.search.substring(1);
+	       var vars = query.split("&");
+	       for (var i=0;i<vars.length;i++) {
+	               var pair = vars[i].split("=");
+	               if(pair[0] == variable){return pair[1];}
+	       }
+	       return(false);
+	}
+	
+	$(function(){ 
+	　　
+		var id=getQueryVariable("id");
+		
+		if(id){
+			$.post("/admin/arcType/findById",{id:id},function(result){
+				  if(result.success){
+					  var arcType=result.arcType;
+					  $("#name").val(arcType.name);
+					  $("#remark").val(arcType.remark);
+					  $("#sort").val(arcType.sort);
+				  }else{
+					  alert("服务器加载有问题，请联系管理员！");
+				  }
+			  },"json");
+		}
+	}); 
+	
+
+</script>
+</body>
+</html>

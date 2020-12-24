@@ -1,0 +1,75 @@
+<meta charset="UTF-8"/>
+<div id="f">
+	<fieldset class="layui-elem-field layui-field-title">
+	  <legend>发布资源</legend>
+	</fieldset>
+    <div>
+      	<div style="padding-left: 10px">
+      		<form class="layui-form" action="/user/article/add" method="post">
+      			<div class="layui-form-item">
+      			<label class="layui-input-block">
+      				发帖规范，利于seo，必看&nbsp;&nbsp;<a href="http://blog.java1234.com/blog/articles/418.html" target="_blank"><font color="red">发帖规范</font></a>
+      			</label>
+      			</div>
+      			<div class="layui-form-item">
+				    <label class="layui-form-label">资源名称：</label>
+				    <div class="layui-input-block">
+				      <input type="text" id="name" name="name" lay-verify="required" autocomplete="off" placeholder="请输入资源名称" class="layui-input" />
+				    </div>
+				 </div>
+				  <div class="layui-form-item">
+				    <label class="layui-form-label">资源类别：</label>
+				    <div class="layui-input-inline">
+				      <select id="arcTypeId" name="arcType.id" lay-verify="required">
+				        <option value="">请选择资源类别</option>
+				        <option th:each="arcType:${application.allArcTypeList}" th:value="${arcType.id}" th:text="${arcType.name}"></option>
+				   
+				      </select>
+				    </div>
+				  </div>
+				  <div class="layui-form-item">
+				    <label class="layui-form-label">资源描述：</label>
+				    <div class="layui-input-block">
+				    	<textarea id="content" name="content" style="display: none;"></textarea>
+				    </div>
+				 </div>
+				 <div class="layui-form-item">
+				   <div class="layui-inline">
+				      <label class="layui-form-label">分享资源：</label>
+				      <div class="layui-input-inline" style="width: 400px">
+				        <input type="text" id="download1" name="download1" lay-verify="url" autocomplete="off" placeholder="请输入百度云分享地址" class="layui-input" />
+				      </div>
+				      <div class="layui-input-inline" style="width: 100px">
+				        <input type="text" id="password1" name="password1" lay-verify="required" autocomplete="off" placeholder="请输入密码" class="layui-input" />
+				      </div>
+				    </div>
+				 </div>
+				 <div class="layui-form-item">
+				    <label class="layui-form-label">积分设置：</label>
+				    <div class="layui-input-inline" style="width: 120px">
+				      <select id="points" name="points" lay-verify="required">
+				        <option value="">请选择积分</option>
+				        <option value="0">0个积分</option>
+				        <option value="1">1个积分</option>
+				        <option value="2">2个积分</option>
+				        <option value="3">3个积分</option>
+				        <option value="4">4个积分</option>
+				        <option value="5">5个积分</option>
+				        <option value="6">6个积分</option>
+				        <option value="7">7个积分</option>
+				        <option value="8">8个积分</option>
+				        <option value="9">9个积分</option>
+				        <option value="10">10个积分</option>
+				      </select>
+				    </div>
+				  </div>
+				  <div class="layui-form-item">
+				    <div class="layui-input-block">
+				      <button class="layui-btn" lay-submit="" lay-filter="pa">立即提交</button>
+				    </div>
+				  </div>
+	      		</form>
+	      	</div>
+	    </div>
+    
+</div>

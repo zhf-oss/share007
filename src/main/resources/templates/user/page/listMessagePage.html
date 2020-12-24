@@ -1,0 +1,14 @@
+<meta charset="UTF-8"/>
+<div id="f">
+	
+	<fieldset class="layui-elem-field layui-field-title">
+	  <legend>系统消息列表</legend>
+	</fieldset>
+    <div class="listMessage">
+	    <ul th:each="message:${messageList}">
+    		<li th:text="'【'+${#dates.format(message.publishDate,'yyyy-MM-dd HH:mm')}+'】'+${message.content}"></li>
+    	</ul>
+		<div align="center" style="padding-top: 20px" th:utext="${pageCode}"></div>
+	</div>
+    
+</div>

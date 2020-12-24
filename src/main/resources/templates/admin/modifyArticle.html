@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title th:text="${title}+'-zhf下载'"></title>
+<link rel="stylesheet" href="/static/layui/css/layui.css" />
+<link rel="stylesheet" href="/static/css/css.css" />
+</head>
+<div style="padding: 20px">
+   	<span class="layui-breadcrumb">
+	  <a>首页</a>
+	  <a>资源管理</a>
+	  <a><cite>帖子修改</cite></a>
+	</span>
+    <div>
+      	<div style="padding: 10px;padding-top: 50px">
+      		<form class="layui-form" action="/admin/article/update" method="post">
+      			<div class="layui-form-item">
+				    <label class="layui-form-label">资源名称：</label>
+				    <div class="layui-input-block">
+				      <input type="text" id="name" name="name" lay-verify="required" autocomplete="off" placeholder="请输入资源名称" class="layui-input" th:value="${article.name}" />
+				    </div>
+				 </div>
+				  <div class="layui-form-item">
+				    <label class="layui-form-label">资源类别：</label>
+				    <div class="layui-input-inline">
+				      <select id="arcTypeId" name="arcType.id" lay-verify="required">
+				        <option value="">请选择资源类别</option>
+				        <option th:each="arcType:${application.allArcTypeList}" th:value="${arcType.id}" th:text="${arcType.name}" th:selected="${arcType.id==article.arcType.id}"></option>
+				      </select>
+				    </div>
+				  </div>
+				  <div class="layui-form-item">
+				    <label class="layui-form-label">资源描述：</label>
+				    <div class="layui-input-block">
+				    	<textarea id="content" name="content" style="display: none;" th:utext="${article.content}"></textarea>
+				    </div>
+				 </div>
+				 <div class="layui-form-item">
+				   <div class="layui-inline">
+				      <label class="layui-form-label">分享资源：</label>
+				      <div class="layui-input-inline" style="width: 400px">
+				        <input type="text" id="download1" name="download1" lay-verify="url" autocomplete="off" placeholder="请输入百度云分享地址" class="layui-input" th:value="${article.download1}" />
+				      </div>
+				      <div class="layui-input-inline" style="width: 100px">
+				        <input type="text" id="password1" name="password1" lay-verify="required" autocomplete="off" placeholder="请输入密码" class="layui-input" th:value="${article.password1}" />
+				      </div>
+				    </div>
+				 </div>
+				 <div class="layui-form-item">
+				    <label class="layui-form-label">积分设置：</label>
+				    <div class="layui-input-inline" style="width: 120px">
+				      <select id="points" name="points" lay-verify="required">
+				        <option value="">请选择积分</option>
+				        <option value="0">0个积分</option>
+				        <option value="1">1个积分</option>
+				        <option value="2">2个积分</option>
+				        <option value="3">3个积分</option>
+				        <option value="4">4个积分</option>
+				        <option value="5">5个积分</option>
+				        <option value="6">6个积分</option>
+				        <option value="7">7个积分</option>
+				        <option value="8">8个积分</option>
+				        <option value="9">9个积分</option>
+				        <option value="10">10个积分</option>
+				      </select>
+				    </div>
+				  </div>
+				  <div class="layui-form-item">
+				    <div class="layui-input-block">
+				      <input type="hidden" name="id" th:value="${article.id}" />
+				      <button class="layui-btn" lay-submit="" lay-filter="pa">立即提交</button>
+				    </div>
+				  </div>
+	      		</form>
+	      	</div>
+	    </div>
+</div>
+<script src="/static/layui/layui.js"></script>
+<script src="/static/js/jquery.js"></script>
+<script th:inline="javascript">
+	/*<![CDATA[*/  
+	layui.use(['element','form','layedit'], function(){
+	      var form=layui.form;
+		  var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+		  var $ = layui.jquery; // 使用jquery
+		  var layedit=layui.layedit;
+		  var index=layedit.build('content',{
+			  uploadImage:{
+				  url:'/admin/article/uploadImage',
+				  type:'post'
+			  }
+		  });
+		  
+	
+		  //监听提交
+		  form.on('submit(pa)', function(data){
+			  var content=layedit.getContent(index);
+			  if(content==""){
+				  layer.msg("请输入资源描述！");
+				  return false;
+			  }
+			$("#content").val(content);
+		    return true;
+		  });
+	});
+
+	$(document).ready(function(){
+        $("#points").val([[${article.points}]])
+    });
+	
+	/*]]>*/
+	
+	
+	
+</script>
+</html>

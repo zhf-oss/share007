@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="UTF-8"/>
+<title th:text="${title}+'-zhf下载'"></title>
+<link rel="stylesheet" href="/static/layui/css/layui.css" />
+<link rel="stylesheet" href="/static/css/css.css" />
+<style type="text/css">
+
+	.w1170{
+		width: 1170px;
+		margin: 0px auto;
+		overflow: hidden;
+	}
+
+	.pLeft{
+		width: 860px;
+		float: left;
+	}
+
+	.pRight{
+		width: 300px;
+		float: right;
+	}
+
+	.data_list{
+		border: 1px solid #E5E5E5;
+		padding: 3px;
+		background-color: #FDFDFD;
+		margin-top: 0px;
+		margin-bottom: 5px;
+	}
+
+	.data_list .data_list_title{
+		font-size: 15px;
+		padding-left:3px;
+		border-bottom: 1px solid #E5E5E5;
+		padding-bottom: 10px;
+		padding-top: 5px;
+	}
+
+
+	.data_list .data_search{
+		padding: 15px;
+		height: 120px;
+	}
+
+
+	.data_list .data_search .stitle{
+		font-size: 14px;
+		color: #999;
+	}
+
+	.data_list .data_search ul li{
+		float: left;
+		padding-left: 15px;
+		line-height: 30px;
+	}
+
+	.data_list .datas{
+		padding-top: 10px;
+		padding-left: 5px;
+		padding-bottom: 10px;
+	}
+
+	.data_list .datas ul li{
+		line-height: 25px;
+	}
+
+
+	.data_list .data_link{
+		padding-top: 10px;
+		padding-left: 5px;
+		height: 60px;
+	}
+
+	.data_list .data_link ul li{
+		float:left;
+		padding-left:10px;
+		line-height: 25px;
+	}
+
+
+	.foot{
+		padding-bottom: 20px;
+	}
+
+	.sInfo{
+		text-align: center;
+		padding-bottom: 5px;
+	}
+
+	.data_list .article .title{
+		text-align: center;
+		margin-top: 20px;
+		font-weight: 700;
+		font-size: 24px;
+	}
+
+
+
+	.data_list .article .info{
+		padding-top: 10px;
+		text-align: center;
+		padding-bottom: 20px;
+	}
+
+	.data_list .article .downloadBtn{
+		float:right;
+		padding-bottom: 10px;
+		padding-right: 20px;
+	}
+
+	.data_list .article .content{
+		padding:10px;
+		margin-top: 20px;
+		padding-bottom: 30px;
+		padding-top: 50px;
+	}
+
+	.data_list .userComment{
+		margin: 10px;
+		margin-bottom: 40px;
+	}
+
+	.data_list .userComment button{
+		margin-top:8px;
+		margin-right:5px;
+		float: right;
+	}
+
+	.commentList{
+		margin: 10px;
+	}
+
+	.commentList  .comment{
+		margin-top:20px;
+		padding-bottom: 5px;
+		border-bottom: 1px #eee dashed;
+	}
+
+	.comment .left_img{
+		float: left;
+	}
+
+	.comment .right .top a{
+		font-weight: 700;
+
+	}
+
+	.comment .right .time{
+		color: #999;
+		margin: 12px 30px 0;
+		font-size: 12px;
+	}
+
+	.comment .right .bottom{
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
+
+	.left_img img{
+		width: 40px;
+		height: 40px;
+	}
+
+	.data_list .articlePage{
+		text-align: center;
+	}
+
+	.data_list .datas .relate li{
+		float: left;
+		padding-left: 40px;
+		width: 380px;
+	}
+
+</style>
+</head>
+<body onload="ResizeImages">
+
+<!-- 头部 -->
+<div class="w1170" th:include="common/head::#h" style="padding-bottom: 10px;overflow:visible;"></div>
+
+<div class="w1170">
+
+	<div class="pLeft">
+
+		<div class="data_list">
+			<div class="data_list_title">
+				<i class="layui-icon layui-icon-app"></i>
+				<span class="head">帖子信息</span>
+			</div>
+			<div class="article">
+				<div class="title" th:text="${article.name}"></div>
+				<div class="info">
+					<a href="" target="_blank" th:text="${article.user.userName}"></a>&nbsp;&nbsp;
+					分享于&nbsp;&nbsp;<font th:text="${#dates.format(article.publishDate,'yyyy-MM-dd')}"></font>
+					&nbsp;&nbsp;&nbsp;&nbsp;查看次数：&nbsp;<font th:text="${article.view+' 次'}"></font>
+					&nbsp;&nbsp;所需：<font color="red" th:text="${article.points}"></font>&nbsp;积分
+				</div>
+				<div align="center">
+					<div class="bshare-custom"><a title="分享到QQ空间" class="bshare-qzone"></a><a title="分享到新浪微博" class="bshare-sinaminiblog"></a><a title="分享到人人网" class="bshare-renren"></a><a title="分享到腾讯微博" class="bshare-qqmb"></a><a title="分享到网易微博" class="bshare-neteasemb"></a><a title="更多平台" class="bshare-more bshare-more-icon more-style-addthis"></a><span class="BSHARE_COUNT bshare-share-count">0</span></div><script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/buttonLite.js#style=-1&amp;uuid=&amp;pophcol=2&amp;lang=zh"></script><script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/bshareC0.js"></script>
+				</div>
+				<div class="downloadBtn">
+					<button class="layui-btn layui-btn-radius" onclick="download()">&nbsp;&nbsp;立即下载&nbsp;&nbsp;</button>
+					<button class="layui-btn layui-btn-radius" onclick="vipDownload()" style="background-color: red">&nbsp;&nbsp;VIP免积分下载&nbsp;&nbsp;</button>
+				</div>
+
+				<div id="content" class="content" th:utext="${article.content}"></div>
+			</div>
+		</div>
+
+		<!-- 评论模块 -->
+		<div class="data_list" style="margin-top: 10px">
+			<div class="data_list_title">
+				<i class="layui-icon layui-icon-dialogue"></i>
+				<span class="head">评论信息</span>&nbsp;&nbsp;<font style="color: #999;" th:text="'共'+${commentCount}+'条'"></font>
+			</div>
+			<div id="userComment" class="userComment">
+				<textarea id="commentContent" placeholder="请输入评论信息" class="layui-textarea"></textarea>
+				<button class="layui-btn layui-btn-radius  layui-btn-sm" onclick="submitData1()">&nbsp;&nbsp;提交评论&nbsp;&nbsp;</button>
+			</div>
+			<div id="commentList" class="commentList"></div>
+			<div id="articlePage" class="articlePage" th:if="${commentCount>0}"></div>
+		</div>
+
+		<!-- 相关资源 -->
+		<div class="data_list" style="margin-top: 10px">
+			<div class="data_list_title">
+				<i class="layui-icon layui-icon-component"></i>
+				<span class="head">相关资源</span>
+			</div>
+			<div class="datas" style="height: 120px">
+				<ul id="relateResource" class="relate">
+				</ul>
+			</div>
+		</div>
+    	
+	</div>
+	
+	<div class="pRight">
+	
+	
+			<div class="data_list">
+	    		<div class="data_list_title">
+	    			<i class="layui-icon layui-icon-fire"></i>
+					<span class="head">热门资源</span>
+	    		</div>
+	    		<div class="datas">
+	    			<ul>
+	    				<li th:each="hotArticle:${hotArticleList }">
+							<a target="_blank" th:href="'/article/'+${hotArticle.id }" th:title="${hotArticle.name }" th:text="${#strings.length(hotArticle.name)>20} ? ${#strings.substring(hotArticle.name,0,31)} : ${hotArticle.name }"></a>
+					    </li>
+	    			</ul>
+	    		</div>
+    	</div>
+	
+	</div>
+
+</div>
+
+<!-- 友情链接 -->
+<div class="w1170"  th:include="common/link::#h" ></div>
+
+<!-- 版权部分 -->
+<div class="w1170"  th:include="common/footer::#h"  style="padding-top: 40px"></div>
+
+<script src="/static/layui/layui.js"></script>
+<script src="/static/js/jquery.js"></script>
+<script src="/static/js/common.js"></script>
+<script th:inline="javascript">
+
+	/*<![CDATA[*/
+	layui.use(['element','laypage','form'], function(){
+		var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+		var $ = layui.jquery; // 使用jquery
+		var laypage = layui.laypage;
+		var tMenu='t_0';
+		$("#"+tMenu).css("color","red");
+
+		//调用分页
+		laypage.render({
+			elem: 'articlePage'
+			, limit: 6
+			, count: [[${commentCount}]]
+			, jump: function (obj) {
+				$("#commentList").empty();
+				$.post("/comment/list", {"article.id": [[${article.id}]], "page": obj.curr}, function (result) {
+					var rows = result;
+					if (rows.length == 0) {
+						$("#commentList").html("<p align='center'>暂无评论</p>");
+					}
+					for (var i = 0; i < rows.length; i++) {
+						var row = rows[i];
+						$("#commentList").append("<div class='comment'>" +
+								"<div class='left_img'>" +
+								"<img src='/userImage/" + row.user.imageName + "' class='layui-nav-img'/>" +
+								"</div>" +
+								"<div class='right'>" +
+								"<dt class='top'>" +
+								row.user.userName +
+								"<span class='time'>" + row.commentDate + "</span>" +
+								"</dt>" +
+								"<dd class='bottom'>" + row.content + "</dd>" +
+								"</div>" +
+								"</div>");
+					}
+				}, "json");
+			}
+		});
+
+		// 相关资源加载
+		$.post("/article/loadRelatedResources",{"q":[[${article.name}]]},function(result){
+			var rows=result;
+			for(var i=0;i<rows.length;i++){
+				var row=rows[i];
+				var subName;
+				if(row.name.length>30){
+					subName=row.name.substring(0,30);
+				}else{
+					subName=row.name;
+				}
+				$("#relateResource").append("<li>"+
+						"<a target='_blank' href='/article/"+row.id+"' title='"+row.name+"'>"+subName+"</a>"+
+						"</li>");
+			}
+		},"json");
+
+	});
+
+	function vipDownload(){
+		// 判断是否登录
+		if ([[${session.currentUser}]] == null) {
+			layer.msg("登录后才能下载资源！");
+			return;
+		}
+
+		$.post("/user/isVip", {}, function (result) {
+			if (result) {
+				// 判断是否下载过
+				// 添加记录
+				$.post("/user/userDownload/exist", {"id": [[${article.id}]]}, function (result) {
+					if (result) { // 下载过
+						layer.confirm('该资您已经下载过,您确定要下载这个资源吗？', {
+							title: "下载提示"
+							, btn: ['确定', '取消'] //按钮
+						}, function () {
+							layer.closeAll('dialog');
+							layer.open({
+								type: 2,
+								title: '资源下载页面',
+								shadeClose: true,
+								shade: 0.8,
+								area: ['550px', '450'],
+								content: '/user/article/toVipDownLoadPage/[[${article.id}]]' //iframe的url
+							});
+						}, function () {
+
+						});
+					} else {  // 未下载过
+						layer.confirm('您确定要下载这个资源吗？', {
+							title: "下载提示"
+							, btn: ['确定', '取消'] //按钮
+						}, function () {
+							layer.closeAll('dialog');
+							layer.open({
+								type: 2,
+								title: '资源下载页面',
+								shadeClose: true,
+								shade: 0.8,
+								area: ['550px', '450'],
+								content: '/user/article/toVipDownLoadPage/[[${article.id}]]' //iframe的url
+							});
+
+						}, function () {
+
+						});
+					}
+				}, "json");
+
+
+			} else {
+				layer.msg("sorry,您不是VIP用户，不能用此通道！");
+			}
+		}, "json");
+	}
+
+	function submitData1(){
+		// 下载过这个资源才可以评论
+		if([[${session.currentUser}]]==null){
+			layer.msg("登录后才能评论！");
+			return;
+		}
+		// 判断是否下载过
+		// 添加记录
+		$.post("/user/userDownload/exist",{"id":[[${article.id}]]},function(result){
+			if(result){ // 下载过
+				var content=$("#commentContent").val();
+				if(content==""){
+					layer.msg("请输入评论信息！");
+					return;
+				}
+				$.post("/user/comment/save",{"article.id":[[${article.id}]],"content":content},function(result){
+					if(result.success){
+						$("#commentContent").val("");
+						layer.msg("评论成功，待管理员审核通过后显示！");
+					}
+				},"json");
+
+			}else{  // 未下载过
+				layer.msg("下载该资源后才能评论！");
+			}
+		},"json");
+	}
+
+	function download(){
+		// 判断是否登录
+		if([[${session.currentUser}]]==null){
+			layer.msg("登录后才能下载资源！");
+			return;
+		}
+		// 判断是否下载过
+		// 添加记录
+		$.post("/user/userDownload/exist",{"id":[[${article.id}]]},function(result){
+			if(result){ // 下载过
+				layer.confirm('该资您已经下载过，再下载不需要扣除积分,您确定要下载这个资源吗？', {
+					title:"下载提示"
+					,btn: ['确定','取消'] //按钮
+				}, function(){
+					layer.closeAll('dialog');
+					layer.open({
+						type: 2,
+						title: '资源下载页面',
+						shadeClose: true,
+						shade: 0.8,
+						area: ['550px', '450'],
+						content: '/user/article/toDownLoadPage/[[${article.id}]]' //iframe的url
+					});
+				}, function(){
+
+				});
+			}else{  // 未下载过
+				// 添加记录
+				$.post("/user/userDownload/enough",{"points":[[${article.points}]]},function(result){
+					if(result){  // 积分足够
+
+						layer.confirm('该资源下载需要 <font color="red">[[${article.points}]]</font> 积分,您确定要下载这个资源吗？', {
+							title:"下载提示"
+							,btn: ['确定','取消'] //按钮
+						}, function(){
+							layer.closeAll('dialog');
+							layer.open({
+								type: 2,
+								title: '资源下载页面',
+								shadeClose: true,
+								shade: 0.8,
+								area: ['550px', '450'],
+								content: '/user/article/toDownLoadPage/[[${article.id}]]' //iframe的url
+							});
+
+						}, function(){
+
+						});
+
+					}else{ // 积分不够
+						layer.msg("sorry，您的积分不够，不能下载该资源！");
+						return;
+					}
+				},"json");
+
+
+			}
+		},"json");
+	}
+
+	function submitData(){
+		var q=$("#q").val();
+		if(q==""){
+			layer.msg("请输入关键字！");
+			$("#q").focus();
+			return false;
+		}
+	}
+
+	$(document).ready(function(){
+		$.post("/article/updateView",{"id":[[${article.id}]]},function(result){
+		});
+	});
+	
+	/*]]>*/
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<meta charset="UTF-8"/>
+<div id="f">
+	<fieldset class="layui-elem-field layui-field-title">
+	  <legend>首页</legend>
+	</fieldset>
+    <div>
+      	<div style="padding-left: 10px">
+      		欢迎用户：<font th:text="${session.currentUser.userName}"></font><br /><br />
+      		用户等级：<font th:text="${session.currentUser.vip==true?'VIP会员':'普通会员'}"></font><br /><br />
+      		用户积分：<font th:text="${session.currentUser.points}"></font><br /><br />
+      	</div>
+    </div>
+</div>

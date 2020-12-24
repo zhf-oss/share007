@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title th:text="${title}+'-zhf下载'"></title>
+<link rel="stylesheet" href="/static/layui/css/layui.css" />
+<link rel="stylesheet" href="/static/css/css.css" />
+<style>
+	
+	table tr td{
+		padding: 10px
+	}
+
+</style>
+</head>
+<div style="padding: 20px">
+   	<span class="layui-breadcrumb">
+	  <a>首页</a>
+	  <a>资源管理</a>
+	  <a><cite>帖子审核</cite></a>
+	</span>
+    <div>
+      	<div style="padding: 10px;padding-top: 50px">
+      		<table border="1px solid red">
+      			<tr>
+      				<td>资源名称：</td>
+      				<td th:text="${article.name}"></td>
+      			</tr>
+      			<tr>
+      				<td>资源类别：</td>
+      				<td th:text="${article.arcType.name}"></td>
+      			</tr>
+      			<tr>
+      				<td valign="top">资源描述：</td>
+      				<td th:utext="${article.content}"></td>
+      			</tr>
+      			<tr>
+      				<td valign="top">分享资源：</td>
+      				<td>
+      					<a target="_blank" th:href="${article.download1}" th:text="${article.download1}"></a>&nbsp;&nbsp;密码：<font color="red" th:text="${article.password1}"></font>
+      				</td>
+      			</tr>
+      			<tr>
+      				<td>积分设置：</td>
+      				<td th:text="${article.points}"></td>
+      			</tr>
+      			<tr>
+      				<td valign="top">审核未通过原因：</td>
+      				<td>
+      					<textarea id="reason" style="width: 400px;height: 80px" placeholder="假如审核未通过，请填写未通过原因"></textarea>
+      				</td>
+      			</tr>
+      			<tr>
+      				<td colspan="2">
+      					<button class="layui-btn" onclick="yes()">审核通过</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					    <button class="layui-btn layui-btn-danger" onclick="no()">驳回</button>
+      				</td>
+      			</tr>
+      		</table>
+	    </div>
+	    </div>
+</div>
+<script src="/static/layui/layui.js"></script>
+<script src="/static/js/jquery.js"></script>
+<script th:inline="javascript">
+	/*<![CDATA[*/  
+	layui.use(['element','form','layedit'], function(){
+		  var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+		 
+	});
+
+	function yes(){
+		$.post("/admin/article/updateState",{"id":[[${article.id}]],"state":2},function(result){
+			if(result.success){
+				layer.open({
+					  content: '执行成功！',
+					  yes: function(index, layero){
+						  history.back(-1);
+					  }
+					});      
+			}else{
+				layer.msg("执行失败，请联系管理员！");
+			}
+		},"json");
+	}
+	
+	function no(){
+		if($("#reason").val()==""){
+			layer.msg("请输入驳回理由！");
+			$("#reason").focus();
+			return;
+		}
+		$.post("/admin/article/updateState",{"id":[[${article.id}]],"state":3,"reason":$("#reason").val()},function(result){
+			if(result.success){
+				layer.open({
+					  content: '执行成功！',
+					  yes: function(index, layero){
+						  history.back(-1);
+					  }
+					});   
+			}else{
+				layer.msg("执行失败，请联系管理员！");
+			}
+		},"json");
+	}
+	
+	/*]]>*/
+</script>
+</html>
