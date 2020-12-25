@@ -1,0 +1,3 @@
+创建db_trip数据库
+导入db_trip.sql
+数据库配置文件在resources文件夹下的jdbc.properties
